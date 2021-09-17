@@ -22,16 +22,19 @@ public class User implements Serializable{
 	private String userName;
 	
 	private String password;
+	private boolean isAdmin;
 
 	public User() {
-		this(-1, "NA","NA");
+		this(-1, "NA","NA", false);
 	}
-	public User(Integer id, String userName, String password) {
-		super();
+
+	public User(Integer id, String userName, String password, boolean isAdmin) {
 		this.id = id;
 		this.userName = userName;
 		this.password = password;
+		this.isAdmin = isAdmin;
 	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -50,6 +53,12 @@ public class User implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
+
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+
+	public void setAdmin(boolean admin) {
+		isAdmin = admin;
+	}
 }

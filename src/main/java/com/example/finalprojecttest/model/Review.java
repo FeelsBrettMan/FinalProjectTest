@@ -10,9 +10,6 @@ public class Review implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "idd", nullable = false)
-	private Long idd;
-
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Integer id;
@@ -28,14 +25,6 @@ public class Review implements Serializable{
 	private String description;
 	
 	private int rating;
-
-	public Long getIdd() {
-		return idd;
-	}
-
-	public void setIdd(Long idd) {
-		this.idd = idd;
-	}
 
 	public Review() {
 		this(-1, new Restaurant(), new User(), "NA", 0);
