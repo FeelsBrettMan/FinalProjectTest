@@ -33,7 +33,7 @@ public class Review implements Serializable{
 	private String description;
 	
 	@NotNull
-	@Column(columnDefinition = "double(1, 2) default 0.00")
+	@Column(columnDefinition = "double(3, 2) default 0.00")
 	private double rating;
 
 	public Review() {
