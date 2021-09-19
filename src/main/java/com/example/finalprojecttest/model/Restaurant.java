@@ -1,6 +1,7 @@
 package com.example.finalprojecttest.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -50,15 +51,17 @@ public class Restaurant implements Serializable{
 	private User user;
 	
 	public Restaurant() {
-		this(-1, "NA","NA","NA");
+		this(-1, "NA","NA","NA", new ArrayList<Review>());
 	}
 	
-	public Restaurant(Integer id, @NotNull String name,@NotNull String address,@NotNull String description) {
+	public Restaurant(Integer id, @NotNull String name,@NotNull String address,@NotNull String description, 
+			List<Review> reviews) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.description = description;
+		this.reviews = reviews;
 	}
 
 	public Integer getId() {
@@ -100,5 +103,12 @@ public class Restaurant implements Serializable{
 	// only need setter for User
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public void setNewReviews() {
+		
+		for(Review a : reviews) {
+			a.setId(-1);
+		}
 	}
 }

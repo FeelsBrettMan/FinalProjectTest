@@ -33,19 +33,19 @@ public class Review implements Serializable{
 	private String description;
 	
 	@NotNull
-	@Column(columnDefinition = "double(1, 2) default 0.00")
+	@Column(columnDefinition = "double(3, 2) default 0.00")
 	private double rating;
 
 	public Review() {
-		this(-1, new Restaurant(), new User(), "NA", 0);
+		this(-1, new Restaurant(), new User(), "NA", 0.0);
 	}
 	public Review(Integer id, Restaurant restaurant, User user, @NotNull String description, @NotNull double rating) {
 		super();
 		this.id = id;
-		this.restaurant = restaurant;
-		this.user = user;
 		this.description = description;
 		this.rating = rating;
+		this.restaurant = restaurant;
+		this.user = user;
 	}
 
 	public Integer getId() {
@@ -54,22 +54,6 @@ public class Review implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public Restaurant getRestaurantId() {
-		return restaurant;
-	}
-
-	public void setRestaurantId(Restaurant restaurantId) {
-		this.restaurant = restaurantId;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUserId(User user) {
-		this.user = user;
 	}
 
 	public String getDescription() {
@@ -84,7 +68,7 @@ public class Review implements Serializable{
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 	
@@ -97,6 +81,7 @@ public class Review implements Serializable{
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}
+
 	
 	
 	

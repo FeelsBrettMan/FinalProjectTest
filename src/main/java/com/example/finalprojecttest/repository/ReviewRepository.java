@@ -12,4 +12,5 @@ import com.example.finalprojecttest.model.User;
 public interface ReviewRepository extends JpaRepository<Review, Integer>{
 
 	List<Review> findByUser_Id(int userId);
+	List<Review> findByRestaurant_Id(int restId);
 }

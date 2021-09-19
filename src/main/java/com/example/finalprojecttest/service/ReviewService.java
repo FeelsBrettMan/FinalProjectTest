@@ -6,8 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.finalprojecttest.model.Restaurant;
 import com.example.finalprojecttest.model.Review;
 import com.example.finalprojecttest.model.User;
+import com.example.finalprojecttest.repository.RestaurantRepository;
 import com.example.finalprojecttest.repository.ReviewRepository;
 import com.example.finalprojecttest.repository.UserRepository;
 
@@ -19,6 +21,10 @@ public class ReviewService {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	RestaurantRepository restRepo;
+	
 	// Get all reviews
 	public List<Review> getReviews(){
 		return repo.findAll();
@@ -57,11 +63,13 @@ public class ReviewService {
 		return updated;
 	}
 	
-	// Create a new Review for a user
-	public Review createReview(int userId, Review review) {
+	// Create a new Review for a restaurant with a specific user 
+	public Review createReview(int userId, int restId, Review review) {
 		review.setId(-1);
 		Optional<User> user = userRepo.findById(userId);
+		Optional<Restaurant> restaurant = restRepo.findById(restId);
 		review.setUser(user.get());
+		review.setRestaurant(restaurant.get());
 		Review created = repo.save(review);
 		return created;
 	}

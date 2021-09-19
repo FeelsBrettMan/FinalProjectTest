@@ -44,6 +44,10 @@ public class UserService {
 	// Add new user 
 	public User createUser(User user) {
 		user.setId(-1);
+		
+		// each review and restaurant (for Admin case) created for a user has a -1 id at first
+		user.setNewReviews();
+		user.setNewRestaurants();
 		User created = repo.save(user);
 		return created;
 	}

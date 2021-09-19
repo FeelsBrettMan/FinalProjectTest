@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.finalprojecttest.exception.ResourceNotFoundException;
+import com.example.finalprojecttest.model.Restaurant;
 import com.example.finalprojecttest.model.Review;
 import com.example.finalprojecttest.repository.ReviewRepository;
 import com.example.finalprojecttest.repository.UserRepository;
@@ -61,6 +62,12 @@ public class ReviewController {
 		return repo.findByUser_Id(userId);
 	}
 	
+	// pull all reviews for 1 restaurant
+	@GetMapping("/restaurants/{restId}/reviews")
+	public List<Review> getAllReviewssByRestId(@PathVariable (value = "restId") int restId){
+		return repo.findByRestaurant_Id(restId);
+	}
+	
 	// Delete all reviews for 1 user
 	@CrossOrigin
 	@DeleteMapping("/users/{userId}/reviews")
@@ -86,23 +93,23 @@ public class ReviewController {
 	}
 	
 	// Need modified
-//	// Update review info
-//	@CrossOrigin
-//	@PutMapping("/users/reviews")
-//	public ResponseEntity<?> updatebyId(@Valid @RequestBody Review review) throws ResourceNotFoundException{
-//		Integer passedId = review.getId();
-//		
-//		if(repo.existsById(passedId)) {
-//			return new ResponseEntity<>(service.updateReview(review), HttpStatus.OK);		}
-//		
-//		throw new ResourceNotFoundException("review with id = " + passedId + " is not found");
-//	}
+	// Update review info
+	@CrossOrigin
+	@PutMapping("/users/reviews")
+	public ResponseEntity<?> updatebyId(@Valid @RequestBody Review review) throws ResourceNotFoundException{
+		Integer passedId = review.getId();
+		
+		if(repo.existsById(passedId)) {
+			return new ResponseEntity<>(service.updateReview(review), HttpStatus.OK);		}
+		
+		throw new ResourceNotFoundException("review with id = " + passedId + " is not found");
+	}
 	
 	// create new review
 	@CrossOrigin
-	@PostMapping("/users/{userId}/reviews")
-	public ResponseEntity<Review> createRestaurant(@PathVariable (value = "userId") int userId, @Valid @RequestBody Review review){
-		return ResponseEntity.status(201).body(service.createReview(userId, review));
+	@PostMapping("/users/{userId}/{restId}/reviews")
+	public ResponseEntity<Review> createRestaurant(@PathVariable (value = "userId") int userId, @PathVariable (value = "restId") int restId, @Valid @RequestBody Review review){
+		return ResponseEntity.status(201).body(service.createReview(userId, restId, review));
 	}
 
 	
