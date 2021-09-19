@@ -37,15 +37,14 @@ public class Review implements Serializable{
 	private double rating;
 
 	public Review() {
-		this(-1, new Restaurant(), new User(), "NA", 0.0);
+		this(-1, "NA", 0.0);
 	}
-	public Review(Integer id, Restaurant restaurant, User user, @NotNull String description, @NotNull double rating) {
+	public Review(Integer id, @NotNull String description, @NotNull double rating) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.rating = rating;
-		this.restaurant = restaurant;
-		this.user = user;
+
 	}
 
 	public Integer getId() {
@@ -82,7 +81,5 @@ public class Review implements Serializable{
 		this.restaurant = restaurant;
 	}
 
-	
-	
 	
 }

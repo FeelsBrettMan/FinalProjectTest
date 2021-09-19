@@ -92,7 +92,6 @@ public class ReviewController {
 		
 	}
 	
-	// Need modified
 	// Update review info
 	@CrossOrigin
 	@PutMapping("/users/reviews")
