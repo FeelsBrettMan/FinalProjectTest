@@ -23,6 +23,8 @@ import com.example.finalprojecttest.repository.RestaurantRepository;
 import com.example.finalprojecttest.repository.UserRepository;
 import com.example.finalprojecttest.service.RestaurantService;
 
+import io.swagger.annotations.ApiOperation;
+
 @CrossOrigin
 @RequestMapping("/api")
 @RestController
@@ -35,6 +37,7 @@ public class RestaurantController {
 	@Autowired
 	UserRepository userRepo;
 	
+	@ApiOperation(value = "Get all Restaurants")
 	// Get all Restaurants
 	@CrossOrigin
 	@GetMapping("/restaurants")
@@ -42,6 +45,8 @@ public class RestaurantController {
 		return service.getRestaurants();
 	}
 	
+	// Provide details on how to document this api
+	@ApiOperation(value = "Find a restaurant by its id")		
 	// Get Restaurants by id
 	@CrossOrigin
 	@GetMapping("/restaurants/{id}")
@@ -54,6 +59,7 @@ public class RestaurantController {
 		
 	}
 	
+	@ApiOperation(value = "Find restaurant by name")
 	// find by name
 	@CrossOrigin
 	@GetMapping("/restaurants/name/{name}")
@@ -62,13 +68,14 @@ public class RestaurantController {
 		return repo.findByName(name);
 	}
 	
-
+	@ApiOperation(value = "Pull all restaurants pages for 1 admin")
 	// pull all restaurants pages for 1 admin
 	@GetMapping("/admin/{adminId}/restaurants")
 	public List<Restaurant> getAllRestaurantsByAdminId(@PathVariable (value = "adminId") int adminId){
 		return repo.findByUserId(adminId);
 	}
 	
+	@ApiOperation(value = "Delete all restaurants for 1 admin: Ony admin can do")
 	// Delete all restaurants for 1 admin: Ony admin can do
 	@CrossOrigin
 	@DeleteMapping("/admin/{adminId}/restaurants")
@@ -81,6 +88,7 @@ public class RestaurantController {
 		
 	}
 	
+	@ApiOperation(value = "Delete restaurant by id: Ony admin can do")
 	// Delete restaurant by id: Ony admin can do
 	@CrossOrigin
 	@DeleteMapping("/admin/restaurants/{id}")
@@ -93,6 +101,7 @@ public class RestaurantController {
 		
 	}
 	
+	@ApiOperation(value = "Update restaurant info: Ony admin can do")
 	// Update restaurant info: Ony admin can do
 	@CrossOrigin
 	@PutMapping("/admin/restaurants")
@@ -105,6 +114,7 @@ public class RestaurantController {
 		throw new ResourceNotFoundException("restaurant with id = " + passedId + " is not found");
 	}
 	
+	@ApiOperation(value = "Create new restaurant: Ony admin can do")
 	// create new restaurant: Ony admin can do
 	@CrossOrigin
 	@PostMapping("/admin/{adminId}/restaurants")

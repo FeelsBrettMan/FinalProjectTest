@@ -24,6 +24,8 @@ import com.example.finalprojecttest.repository.ReviewRepository;
 import com.example.finalprojecttest.repository.UserRepository;
 import com.example.finalprojecttest.service.ReviewService;
 
+import io.swagger.annotations.ApiOperation;
+
 @CrossOrigin
 @RequestMapping("/api")
 @RestController
@@ -36,6 +38,8 @@ public class ReviewController {
 	@Autowired
 	UserRepository userRepo;
 	
+	@ApiOperation(value = "Find all reviews",
+			notes = "Will return a 404 if id isn't found")
 	// Get all Reviews
 	@CrossOrigin
 	@GetMapping("/reviews")
@@ -43,6 +47,8 @@ public class ReviewController {
 		return service.getReviews();
 	}
 	
+	// Provide details on how to document this api
+	@ApiOperation(value = "Find a review by its id")	
 	// Get Review by id
 	@CrossOrigin
 	@GetMapping("/reviews/{id}")
@@ -55,19 +61,21 @@ public class ReviewController {
 		
 	}
 	
-
+	@ApiOperation(value = "Pull all Reviews for 1 user")
 	// pull all Reviews for 1 user
 	@GetMapping("/users/{userId}/reviews")
 	public List<Review> getAllReviewsByUser(@PathVariable (value = "userId") int userId){
 		return repo.findByUser_Id(userId);
 	}
 	
+	@ApiOperation(value = "Pull all reviews for 1 restaurant")
 	// pull all reviews for 1 restaurant
 	@GetMapping("/restaurants/{restId}/reviews")
 	public List<Review> getAllReviewssByRestId(@PathVariable (value = "restId") int restId){
 		return repo.findByRestaurant_Id(restId);
 	}
 	
+	@ApiOperation(value = "Delete all reviews for 1 user")
 	// Delete all reviews for 1 user
 	@CrossOrigin
 	@DeleteMapping("/users/{userId}/reviews")
@@ -80,6 +88,7 @@ public class ReviewController {
 		
 	}
 	
+	@ApiOperation(value = "Delete review by id")
 	// Delete review by id
 	@CrossOrigin
 	@DeleteMapping("/users/reviews/{id}")
@@ -92,6 +101,7 @@ public class ReviewController {
 		
 	}
 	
+	@ApiOperation(value = "Update review info")
 	// Update review info
 	@CrossOrigin
 	@PutMapping("/users/reviews")
@@ -104,6 +114,7 @@ public class ReviewController {
 		throw new ResourceNotFoundException("review with id = " + passedId + " is not found");
 	}
 	
+	@ApiOperation(value = "Create new review")
 	// create new review
 	@CrossOrigin
 	@PostMapping("/users/{userId}/{restId}/reviews")

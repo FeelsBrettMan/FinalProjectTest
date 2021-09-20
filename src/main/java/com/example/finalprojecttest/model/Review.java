@@ -23,7 +23,6 @@ public class Review implements Serializable{
 	@JoinColumn(name="restaurant_id", referencedColumnName = "id")
 	private Restaurant restaurant;
 	
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="user_id", referencedColumnName = "id")
 	private User user;
@@ -75,7 +74,8 @@ public class Review implements Serializable{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+	public Integer getUser(){return this.user.getId();}
+
 	// only need setter for Restaurant
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;

@@ -22,6 +22,8 @@ import com.example.finalprojecttest.model.User;
 import com.example.finalprojecttest.repository.UserRepository;
 import com.example.finalprojecttest.service.UserService;
 
+import io.swagger.annotations.ApiOperation;
+
 @CrossOrigin
 @RequestMapping("/api")
 @RestController
@@ -33,6 +35,7 @@ public class UserController {
 	@Autowired
 	UserRepository repo;
 	
+	@ApiOperation(value = "Get all users")
 	// Get all users
 	@CrossOrigin
 	@GetMapping("/users")
@@ -40,6 +43,8 @@ public class UserController {
 		return service.getUsers();
 	}
 	
+	// Provide details on how to document this api
+	@ApiOperation(value = "Find a user by their id")		
 	// Get users by id
 	@CrossOrigin
 	@GetMapping("/users/{id}")
@@ -52,6 +57,7 @@ public class UserController {
 		
 	}
 	
+	@ApiOperation(value = "Find user by username")
 	// find by username
 	@CrossOrigin
 	@GetMapping("/users/userName/{userName}")
@@ -60,6 +66,7 @@ public class UserController {
 		return repo.findOneByUserName(userName);
 	}
 	
+	@ApiOperation(value = "Delete user by id")
 	// Delete user by id
 	@CrossOrigin
 	@DeleteMapping("/users/{id}")
@@ -72,6 +79,7 @@ public class UserController {
 		
 	}
 	
+	@ApiOperation(value = "Update user info")
 	// Update user info
 	@CrossOrigin
 	@PutMapping("/users")
@@ -84,6 +92,7 @@ public class UserController {
 		throw new ResourceNotFoundException("User with id = " + passedId + " is not found");
 	}
 	
+	@ApiOperation(value = "Create new user")
 	// create new user
 	@CrossOrigin
 	@PostMapping("/users")
