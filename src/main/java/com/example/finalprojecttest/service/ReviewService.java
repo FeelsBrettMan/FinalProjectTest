@@ -58,8 +58,11 @@ public class ReviewService {
 	
 	// Update Review info
 	public Review updateReview(Review review) {
-		
-		Review updated = repo.save(review);
+		Review toUpdate = repo.getById(review.getId());
+		System.out.println("toUpdate = " + toUpdate);
+		toUpdate.setDescription(review.getDescription());
+		toUpdate.setRating(review.getRating());
+		Review updated = repo.save(toUpdate);
 		return updated;
 	}
 	

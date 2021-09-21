@@ -18,7 +18,6 @@ public class Review implements Serializable{
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Integer id;
 	
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="restaurant_id", referencedColumnName = "id")
 	private Restaurant restaurant;
@@ -74,12 +73,15 @@ public class Review implements Serializable{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public Integer getUser(){return this.user.getId();}
+	// returns the username with the JSON (needed for front end)
+	public String getUser(){return this.user.getUserName();}
 
 	// only need setter for Restaurant
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}
+	// returns the restaurant name with the JSON (needed for front end)
+	public String getRestaurant(){return this.restaurant.getName();}
 
-	
+
 }
