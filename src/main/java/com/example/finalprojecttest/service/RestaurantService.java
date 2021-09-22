@@ -71,15 +71,13 @@ public class RestaurantService {
 	}
 	
 	// Update Restaurant info
-	public Restaurant updateRestaurant(Restaurant restaurant)throws ResourceNotFoundException {
-		Integer passedId = restaurant.getId();
-		
-		if(repo.existsById(passedId)) {
-			Restaurant updated = repo.save(restaurant);
-			return updated;
-		}
-		throw new ResourceNotFoundException("restaurant with id = " + passedId + " is not found");
-		
+	public Restaurant updateRestaurant(Restaurant restaurant) {
+		Restaurant toUpdate = repo.getById(restaurant.getId());
+		toUpdate.setName(restaurant.getName());
+		toUpdate.setAddress(restaurant.getAddress());
+		toUpdate.setDescription(restaurant.getDescription());
+		Restaurant updated = repo.save(toUpdate);
+		return updated;
 	}
 	
 	// Create a new restaurant page for an admin

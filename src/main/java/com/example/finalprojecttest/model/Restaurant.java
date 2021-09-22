@@ -45,8 +45,7 @@ public class Restaurant implements Serializable{
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
 	private List<Review> reviews;
 	
-	// User represents 
-	@JsonIgnore
+
 	@ManyToOne
 	@JoinColumn(name="user_id", referencedColumnName = "id")
 	private User user;
@@ -104,6 +103,10 @@ public class Restaurant implements Serializable{
 	// only need setter for User
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public Integer getUser() {
+		if(user == null) return null;
+		return user.getId();
 	}
 	
 	public void setNewReviews() {

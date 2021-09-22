@@ -74,14 +74,20 @@ public class Review implements Serializable{
 		this.user = user;
 	}
 	// returns the username with the JSON (needed for front end)
-	public String getUser(){return this.user.getUserName();}
+	public String getUser(){
+		if(user == null) return null;
+		return this.user.getUserName();
+	}
 
 	// only need setter for Restaurant
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
 	}
 	// returns the restaurant name with the JSON (needed for front end)
-	public String getRestaurant(){return this.restaurant.getName();}
+	public String getRestaurant(){
+		if(restaurant == null) return null;
+		return this.restaurant.getName();
+	}
 
 
 }
