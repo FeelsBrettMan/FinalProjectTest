@@ -25,8 +25,7 @@ public class ReviewController {
 
 	@Autowired
 	ReviewService service;
-	@Autowired
-	ReviewRepository repo;
+	
 	@Autowired
 	UserRepository userRepo;
 	
@@ -45,11 +44,9 @@ public class ReviewController {
 	@CrossOrigin
 	@GetMapping("/reviews/{id}")
 	public ResponseEntity<?> getReview(@PathVariable (value = "id") int id) throws ResourceNotFoundException {
-		if(repo.existsById(id)) {
-			return ResponseEntity.ok().body(service.getReviewById(id));
-		}
 		
-		throw new ResourceNotFoundException("Review with id = " + id + " is not found");
+		return ResponseEntity.ok().body(service.getReviewById(id));
+		
 		
 	}
 	
@@ -57,14 +54,14 @@ public class ReviewController {
 	// pull all Reviews for 1 user
 	@GetMapping("/users/{userId}/reviews")
 	public List<Review> getAllReviewsByUser(@PathVariable (value = "userId") int userId){
-		return repo.findByUser_Id(userId);
+		return service.getReviewsByUser(userId);
 	}
 	
 	@ApiOperation(value = "Pull all reviews for 1 restaurant")
 	// pull all reviews for 1 restaurant
 	@GetMapping("/restaurants/{restId}/reviews")
 	public List<Review> getAllReviewssByRestId(@PathVariable (value = "restId") int restId){
-		return repo.findByRestaurant_Id(restId);
+		return service.getReviewsByRestaurant(restId);
 	}
 	
 	@ApiOperation(value = "Delete all reviews for 1 user")
@@ -85,11 +82,9 @@ public class ReviewController {
 	@CrossOrigin
 	@DeleteMapping("/users/reviews/{id}")
 	public ResponseEntity<?> deleteReview(@PathVariable (value= "id") int id) throws ResourceNotFoundException{
-		if(repo.existsById(id)) {
-			return new ResponseEntity<>(service.deleteOne(id), HttpStatus.OK);
-		}
 		
-		throw new ResourceNotFoundException("review with id = " + id + " is not found");
+		return new ResponseEntity<>(service.deleteOne(id), HttpStatus.OK);
+	
 		
 	}
 	
@@ -98,19 +93,16 @@ public class ReviewController {
 	@CrossOrigin
 	@PutMapping("/users/reviews")
 	public ResponseEntity<?> updatebyId(@Valid @RequestBody Review review) throws ResourceNotFoundException{
-		Integer passedId = review.getId();
 		
-		if(repo.existsById(passedId)) {
-			return new ResponseEntity<>(service.updateReview(review), HttpStatus.OK);		}
+		return new ResponseEntity<>(service.updateReview(review), HttpStatus.OK);		
 		
-		throw new ResourceNotFoundException("review with id = " + passedId + " is not found");
 	}
 	
 	@ApiOperation(value = "Create new review")
 	// create new review
 	@CrossOrigin
 	@PostMapping("/users/{userId}/{restId}/reviews")
-	public ResponseEntity<Review> createRestaurant(@PathVariable (value = "userId") int userId, @PathVariable (value = "restId") int restId, @Valid @RequestBody Review review){
+	public ResponseEntity<Review> createReview(@PathVariable (value = "userId") int userId, @PathVariable (value = "restId") int restId, @Valid @RequestBody Review review){
 		return ResponseEntity.status(201).body(service.createReview(userId, restId, review));
 	}
 

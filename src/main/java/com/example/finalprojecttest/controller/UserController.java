@@ -7,6 +7,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.finalprojecttest.model.AuthenticationRequest;
+import com.example.finalprojecttest.model.AuthenticationResponse;
 import com.example.finalprojecttest.exception.ResourceNotFoundException;
 import com.example.finalprojecttest.model.User;
 import com.example.finalprojecttest.repository.UserRepository;
+import com.example.finalprojecttest.service.MyUserDetailsService;
 import com.example.finalprojecttest.service.UserService;
+import com.example.finalprojecttest.util.JwtUtil;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -30,10 +38,15 @@ import io.swagger.annotations.ApiOperation;
 public class UserController {
 	
 	@Autowired
-	UserService service;
+	private AuthenticationManager authenticationManager;
+	@Autowired
+	private MyUserDetailsService userDetailsService;
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	@Autowired
-	UserRepository repo;
+	UserService service;
+	
 	
 	@ApiOperation(value = "Get all users")
 	// Get all users
@@ -49,12 +62,9 @@ public class UserController {
 	@CrossOrigin
 	@GetMapping("/users/{id}")
 	public ResponseEntity<?> getUser(@PathVariable (value = "id") int id) throws ResourceNotFoundException {
-		if(repo.existsById(id)) {
-			return ResponseEntity.ok().body(service.getUserById(id));
-		}
-		
-		throw new ResourceNotFoundException("User with id = " + id + " is not found");
-		
+			
+		return ResponseEntity.ok().body(service.getUserById(id));
+			
 	}
 	
 	@ApiOperation(value = "Find user by username")
@@ -63,7 +73,7 @@ public class UserController {
 	@GetMapping("/users/userName/{userName}")
 	public User getByUsername(@PathVariable (value = "userName") String userName)
 	{
-		return repo.findOneByUserName(userName);
+		return service.getByUsername(userName);
 	}
 	
 	@ApiOperation(value = "Delete user by id")
@@ -71,11 +81,8 @@ public class UserController {
 	@CrossOrigin
 	@DeleteMapping("/users/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable (value = "id") int id) throws ResourceNotFoundException{
-		if(repo.existsById(id)) {
-			return new ResponseEntity<>(service.deleteById(id), HttpStatus.OK);
-		}
-		
-		throw new ResourceNotFoundException("User with id = " + id + " is not found");
+			
+		return new ResponseEntity<>(service.deleteById(id), HttpStatus.OK);
 		
 	}
 	
@@ -84,12 +91,9 @@ public class UserController {
 	@CrossOrigin
 	@PutMapping("/users")
 	public ResponseEntity<?> updateUsernamebyId(@Valid @RequestBody User user) throws ResourceNotFoundException{
-		Integer passedId = user.getId();
 		
-		if(repo.existsById(passedId)) {
-			return new ResponseEntity<>(service.updateUser(user), HttpStatus.OK);		}
+		return new ResponseEntity<>(service.updateUser(user), HttpStatus.OK);		
 		
-		throw new ResourceNotFoundException("User with id = " + passedId + " is not found");
 	}
 	
 	@ApiOperation(value = "Create new user")
@@ -100,7 +104,37 @@ public class UserController {
 		return ResponseEntity.status(201).body(service.createUser(user));
 	}
 	
-
+	
+	
+	// user can provide credentials and get back a jwt
+		// that can be used to perform request for all other APIs
+		@PostMapping("/authenticate")
+		public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest request) throws Exception{ 
+			
+			// will catch the exception for bad credentials and 
+			try {
+			// make sure we can authenticate our user based on the username and password
+			authenticationManager.authenticate(
+						new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+					);
+			}catch(BadCredentialsException e) { 
+				
+				//.... then provide message as to why user couldn't be authenticated
+				throw new Exception("Incorrect username or password");
+			}
+			// as long as user is found we can create the jwt
+			
+			
+			//find the user..
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+			//..generate token for this user
+			final String jwt = jwtUtil.generateTokens(userDetails);
+			
+			//return token
+			return ResponseEntity.status(200).body(new AuthenticationResponse(jwt));
+			
+		}
+		
 }
 
 

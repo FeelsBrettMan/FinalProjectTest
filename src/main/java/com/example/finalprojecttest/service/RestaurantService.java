@@ -4,8 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.finalprojecttest.exception.ResourceNotFoundException;
 import com.example.finalprojecttest.model.Restaurant;
 import com.example.finalprojecttest.model.User;
 import com.example.finalprojecttest.repository.RestaurantRepository;
@@ -25,17 +29,29 @@ public class RestaurantService {
 	}
 	
 	// Get restaurants by id
-	public Restaurant getRestaurantById(int id) {
+	public Restaurant getRestaurantById(int id) throws ResourceNotFoundException {
+		if(repo.existsById(id)) {
+			return repo.getById(id);
+		}
 		
-		return repo.getById(id);
-	
+		throw new ResourceNotFoundException("Restaurant with id = " + id + " is not found");
 	}		
 	
+	// Find by name
+	public Restaurant getByName(String name)
+	{
+		return repo.findByName(name);
+	}
+	
+	// Find restaurant by admin Id
+	public List<Restaurant> getAllRestaurantsByAdminId(int adminId){
+		return repo.findByUser_Id(adminId);
+	}
 	
 	// Delete all restaurants pages for 1 admin
 	public List<Restaurant> deleteAll(int adminId) {
 
-		List<Restaurant> toRemoved = repo.findByUserId(adminId);
+		List<Restaurant> toRemoved = repo.findByUser_Id(adminId);
 		for(Restaurant restaurant : toRemoved) {
 			repo.delete(restaurant);
 		}
@@ -43,11 +59,15 @@ public class RestaurantService {
 	}
 	
 	// Delete 1 restaurant page for 1 admin
-	public Restaurant deleteOne(int restId) {
-
-		Restaurant toRemoved = repo.getById(restId);
-		repo.deleteById(restId);
-		return toRemoved;
+	public Restaurant deleteOne(int restId) throws ResourceNotFoundException{
+		if(repo.existsById(restId)) {
+			Restaurant toRemoved = repo.getById(restId);
+			repo.deleteById(restId);
+			return toRemoved;
+		}
+		
+		throw new ResourceNotFoundException("restaurant with id = " + restId + " is not found");
+		
 	}
 	
 	// Update Restaurant info

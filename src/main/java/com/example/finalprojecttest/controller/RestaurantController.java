@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,8 +33,7 @@ public class RestaurantController {
 
 	@Autowired
 	RestaurantService service;
-	@Autowired
-	RestaurantRepository repo;
+	
 	@Autowired
 	UserRepository userRepo;
 	
@@ -51,11 +51,10 @@ public class RestaurantController {
 	@CrossOrigin
 	@GetMapping("/restaurants/{id}")
 	public ResponseEntity<?> getRestaurant(@PathVariable (value = "id") int id) throws ResourceNotFoundException {
-		if(repo.existsById(id)) {
-			return ResponseEntity.ok().body(service.getRestaurantById(id));
-		}
 		
-		throw new ResourceNotFoundException("Restaurant with id = " + id + " is not found");
+		return ResponseEntity.ok().body(service.getRestaurantById(id));
+		
+	
 		
 	}
 	
@@ -63,16 +62,16 @@ public class RestaurantController {
 	// find by name
 	@CrossOrigin
 	@GetMapping("/restaurants/name/{name}")
-	public Restaurant getByUsername(@PathVariable (value = "name") String name)
+	public Restaurant getByName(@PathVariable (value = "name") String name)
 	{
-		return repo.findByName(name);
+		return service.getByName(name);
 	}
 	
 	@ApiOperation(value = "Pull all restaurants pages for 1 admin")
 	// pull all restaurants pages for 1 admin
 	@GetMapping("/admin/{adminId}/restaurants")
 	public List<Restaurant> getAllRestaurantsByAdminId(@PathVariable (value = "adminId") int adminId){
-		return repo.findByUserId(adminId);
+		return service.getAllRestaurantsByAdminId(adminId);
 	}
 	
 	@ApiOperation(value = "Delete all restaurants for 1 admin: Ony admin can do")
@@ -93,11 +92,8 @@ public class RestaurantController {
 	@CrossOrigin
 	@DeleteMapping("/admin/restaurants/{id}")
 	public ResponseEntity<?> deleteRestaurant(@PathVariable (value = "id") int id) throws ResourceNotFoundException{
-		if(repo.existsById(id)) {
-			return new ResponseEntity<>(service.deleteOne(id), HttpStatus.OK);
-		}
-		
-		throw new ResourceNotFoundException("restaurant with id = " + id + " is not found");
+			
+		return new ResponseEntity<>(service.deleteOne(id), HttpStatus.OK);
 		
 	}
 	
@@ -106,12 +102,9 @@ public class RestaurantController {
 	@CrossOrigin
 	@PutMapping("/admin/restaurants")
 	public ResponseEntity<?> updatebyId(@Valid @RequestBody Restaurant restaurant) throws ResourceNotFoundException{
-		Integer passedId = restaurant.getId();
 		
-		if(repo.existsById(passedId)) {
-			return new ResponseEntity<>(service.updateRestaurant(restaurant), HttpStatus.OK);		}
-		
-		throw new ResourceNotFoundException("restaurant with id = " + passedId + " is not found");
+		return new ResponseEntity<>(service.updateRestaurant(restaurant), HttpStatus.OK);		
+	
 	}
 	
 	@ApiOperation(value = "Create new restaurant: Ony admin can do")
