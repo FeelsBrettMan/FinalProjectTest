@@ -45,6 +45,7 @@ public class Restaurant implements Serializable{
 	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
 	private List<Review> reviews;
 	
+	// User represents 
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="user_id", referencedColumnName = "id")

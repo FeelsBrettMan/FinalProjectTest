@@ -32,8 +32,6 @@ public class UserController {
 	@Autowired
 	UserService service;
 	
-	@Autowired
-	UserRepository repo;
 	
 	@ApiOperation(value = "Get all users")
 	// Get all users
@@ -49,12 +47,9 @@ public class UserController {
 	@CrossOrigin
 	@GetMapping("/users/{id}")
 	public ResponseEntity<?> getUser(@PathVariable (value = "id") int id) throws ResourceNotFoundException {
-		if(repo.existsById(id)) {
-			return ResponseEntity.ok().body(service.getUserById(id));
-		}
-		
-		throw new ResourceNotFoundException("User with id = " + id + " is not found");
-		
+			
+		return ResponseEntity.ok().body(service.getUserById(id));
+			
 	}
 	
 	@ApiOperation(value = "Find user by username")
@@ -63,7 +58,7 @@ public class UserController {
 	@GetMapping("/users/userName/{userName}")
 	public User getByUsername(@PathVariable (value = "userName") String userName)
 	{
-		return repo.findOneByUserName(userName);
+		return service.getByUsername(userName);
 	}
 	
 	@ApiOperation(value = "Delete user by id")
@@ -71,11 +66,8 @@ public class UserController {
 	@CrossOrigin
 	@DeleteMapping("/users/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable (value = "id") int id) throws ResourceNotFoundException{
-		if(repo.existsById(id)) {
-			return new ResponseEntity<>(service.deleteById(id), HttpStatus.OK);
-		}
-		
-		throw new ResourceNotFoundException("User with id = " + id + " is not found");
+			
+		return new ResponseEntity<>(service.deleteById(id), HttpStatus.OK);
 		
 	}
 	
@@ -84,12 +76,9 @@ public class UserController {
 	@CrossOrigin
 	@PutMapping("/users")
 	public ResponseEntity<?> updateUsernamebyId(@Valid @RequestBody User user) throws ResourceNotFoundException{
-		Integer passedId = user.getId();
 		
-		if(repo.existsById(passedId)) {
-			return new ResponseEntity<>(service.updateUser(user), HttpStatus.OK);		}
+		return new ResponseEntity<>(service.updateUser(user), HttpStatus.OK);		
 		
-		throw new ResourceNotFoundException("User with id = " + passedId + " is not found");
 	}
 	
 	@ApiOperation(value = "Create new user")
