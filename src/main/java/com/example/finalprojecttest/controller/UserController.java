@@ -1,5 +1,6 @@
 package com.example.finalprojecttest.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -61,11 +63,30 @@ public class UserController {
 	// Get users by id
 	@CrossOrigin
 	@GetMapping("/users/{id}")
-	public ResponseEntity<?> getUser(@PathVariable (value = "id") int id) throws ResourceNotFoundException {
-			
+	public ResponseEntity<?> getUser(@PathVariable (value = "id") int id, Principal principal) throws ResourceNotFoundException {
+		principal = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = principal.getName();
+		
+		if(!service.getUserById(id).getUserName().equals(currentPrincipalName)) {
+			return ResponseEntity.status(400).body(service.getUserById(id).getUserName()+" is not the current user");
+		}
 		return ResponseEntity.ok().body(service.getUserById(id));
 			
 	}
+	/*  //Doesn't work, but may be on the right track
+	 * 
+	 * 
+	 	public ResponseEntity<?> getUser(@PathVariable (value = "id") int id, Principal principal) throws ResourceNotFoundException {
+		principal = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = principal.getName();
+		
+		if(service.getUserById(id).getUserName() != currentPrincipalName) {
+			return ResponseEntity.status(400).body(currentPrincipalName+" is not the current user");
+		}
+		return ResponseEntity.ok().body(service.getUserById(id));
+			
+	}
+	 */
 	
 	@ApiOperation(value = "Find user by username")
 	// find by username
