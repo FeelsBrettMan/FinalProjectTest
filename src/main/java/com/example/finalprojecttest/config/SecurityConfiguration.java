@@ -46,11 +46,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //			.and().exceptionHandling().accessDeniedPage("/403");
 //			
 		
-		http.csrf().disable()
+		http.cors().and().csrf().disable()
 			.authorizeRequests()
 			.antMatchers("/").permitAll()
 			.antMatchers("/api/admin/**").hasRole("ADMIN")
-			.antMatchers(HttpMethod.GET, "/api/**").permitAll()
+			//.antMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+			//.antMatchers(HttpMethod.GET, "/api/**").permitAll()
+			.antMatchers("/api/users/**").permitAll()
+			.antMatchers(HttpMethod.GET, "/api/restaurants/**").permitAll()
+			.antMatchers(HttpMethod.GET, "/api/reviews").permitAll()
 			.antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
 			.anyRequest().authenticated()
 			.and().sessionManagement()
