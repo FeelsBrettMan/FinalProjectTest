@@ -52,8 +52,11 @@ public class RestaurantService {
 	
 	// Update Restaurant info
 	public Restaurant updateRestaurant(Restaurant restaurant) {
-		
-		Restaurant updated = repo.save(restaurant);
+		Restaurant toUpdate = repo.getById(restaurant.getId());
+		toUpdate.setName(restaurant.getName());
+		toUpdate.setAddress(restaurant.getAddress());
+		toUpdate.setDescription(restaurant.getDescription());
+		Restaurant updated = repo.save(toUpdate);
 		return updated;
 	}
 	
